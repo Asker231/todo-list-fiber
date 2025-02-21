@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Asker231/todo-list-fiber.git/config"
 	"github.com/Asker231/todo-list-fiber.git/internal/todos"
+	"github.com/Asker231/todo-list-fiber.git/pkg/db"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,10 +12,20 @@ func main() {
 	//init server
 	app := fiber.New()
 	//init config
-	_ = config.NewConfig()
+	cnf := config.NewConfig()
+
 	//init db
+	db ,err := db.InitDataBAse(cnf)	
+	if err != nil{
+		return 
+	}
+	defer db.Close()
+	//init repo 
 	
+	//init service
+
 	//init handler
+
 	todos.NewTodoHandler(app)
 
 
