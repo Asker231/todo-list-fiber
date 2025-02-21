@@ -33,22 +33,35 @@ func(r *RepositoryTodo)Cretate(todo TodoModel){
 	if err != nil{
 		fmt.Println(err.Error())
 	}
-	fmt.Println(res)
+	fmt.Println(res.String())
 }
 
-//find todo
-func(r *RepositoryTodo)FindByid(id int)([]TodoModel,error){
-	query := `SELECT * FROM todo WHERE id = $1`
-
-	args := pgx.NamedArgs{
-		"id":id,
-	}
-
-	rows ,_ := r.DataBase.Query(context.Background(),query,args)
-
-	todo,err := pgx.CollectRows(rows,pgx.RowToStructByNameLax[TodoModel])
+//delete todo
+func(r *RepositoryTodo)DeleteByid(id int)(TodoModel,error){
+ 	var todo  TodoModel
+	err := r.DataBase.QueryRow(context.Background(),"DELETE  FROM todo WHERE id = $1",id).Scan(&todo.Id,&todo.Title,&todo.Description,&todo.CreatedAt,&todo.UpdatedAt)
 	if err != nil{
 		fmt.Println(err.Error())
 	}
 	return todo,nil
 }
+
+//getall todo
+func(r *RepositoryTodo)GetAllRepo()([]TodoModel,error){
+	var todos []TodoModel
+	rows,err := r.DataBase.Query(context.Background(),"SELECT * FROM todo")
+	if err != nil{
+		return nil,err
+	}
+	defer rows.Close()
+	for rows.Next(){
+		var todo TodoModel
+		if err := rows.Scan(&todo.Id,&todo.Title,&todo.Description,&todo.CreatedAt,&todo.UpdatedAt);err != nil{
+		   fmt.Println(err.Error())
+		}
+		todos = append(todos, todo)
+	}
+	return todos,nil
+}
+
+//update todo

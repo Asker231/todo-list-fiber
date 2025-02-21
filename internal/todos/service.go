@@ -33,11 +33,22 @@ func(s *ServiceTodo)CretaeService(title,description string){
 
 //find by id
 
-func(s *ServiceTodo)FindTaskByid(id int)([]repo.TodoModel){
+func(s *ServiceTodo)DeleteById(id int)(repo.TodoModel){
 
-	t ,err := s.Repo.FindByid(id)
+	t ,err := s.Repo.DeleteByid(id)
 	if err != nil{
 		fmt.Println(err.Error())
 	}
 	return t
+}
+
+//get all 
+func(s *ServiceTodo)GetAllTodoService()([]repo.TodoModel){
+
+	data,err := s.Repo.GetAllRepo()
+	if err != nil{
+		fmt.Println(err.Error())
+		return nil
+	}
+	return data
 }

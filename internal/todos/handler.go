@@ -15,11 +15,11 @@ func NewTodoHandler(router fiber.Router,service *ServiceTodo){
 	todoHandler := &TodoHandler{
 		Service: *service,
 	}
-	api := router.Group("/task")
-	api.Post("/create",todoHandler.AddTodo)
-	api.Get("/tasks/:id",todoHandler.GetAll)
-	api.Put("/task/:id",todoHandler.UpdateTodo)
-	api.Put("/task/:id",todoHandler.DeleteTodo)
+	api := router.Group("/api")
+	api.Post("/tasks",todoHandler.AddTodo)
+	api.Get("/tasks",todoHandler.GetAll)
+	api.Put("/tasks/:id",todoHandler.UpdateTodo)
+	api.Delete("/tasks/:id",todoHandler.DeleteTodo)
 }
 //add todo method
 func(t *TodoHandler)AddTodo(ctx *fiber.Ctx)error{
@@ -35,26 +35,34 @@ func(t *TodoHandler)AddTodo(ctx *fiber.Ctx)error{
 	return ctx.SendString("Add todo")
 }
 
-//getid
+//getall
 func(t *TodoHandler)GetAll(ctx *fiber.Ctx)error{
-	idStr := ctx.Params("id")
+	allTodo := t.Service.GetAllTodoService()
 
-	id,err:= strconv.Atoi(idStr)
-	if err != nil{
-		fmt.Println(err.Error())
-	}
-
-	todo := t.Service.FindTaskByid(id)
-
-	fmt.Println(todo)
-	return ctx.SendString("All todo")
+	return ctx.JSON(allTodo)
 }
 
 //update todo
 func(t *TodoHandler)UpdateTodo(ctx *fiber.Ctx)error{
+	idStr := ctx.Params("id")
+	_,_ = strconv.Atoi(idStr)
+
+
+
 	return ctx.SendString("Update")
 }
 
+//delete
 func(t *TodoHandler)DeleteTodo(ctx *fiber.Ctx)error{
+	idStr := ctx.Params("id")
+
+	id,err:= strconv.Atoi(idStr)
+
+	if err != nil{
+		fmt.Println(err.Error())
+	}
+
+	_ = t.Service.DeleteById(id)
+
 	return ctx.SendString("Delete")
 }
