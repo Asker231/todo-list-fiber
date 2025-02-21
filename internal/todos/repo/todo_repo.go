@@ -63,4 +63,3 @@ func(r *RepositoryTodo)GetAllRepo()([]TodoModel,error){
 	return todos,nil
 }
 
-//update todo

@@ -3,8 +3,8 @@ package todos
 
 type(
 	TodoRequest struct{
-		Title string `json:"title"`
-		Description string `json:"description"`
+		Title string `json:"title" validate:"required,min=3,max=30"`
+		Description string `json:"description" validate:"required,min=3,max=30"`
 		Status string `json:"status"`
 	}
 )

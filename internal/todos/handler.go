@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/Asker231/todo-list-fiber.git/pkg/validate"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -28,6 +29,12 @@ func(t *TodoHandler)AddTodo(ctx *fiber.Ctx)error{
 
 	if err := ctx.BodyParser(todo);err != nil{	
 		fmt.Println(err.Error()) 
+	}
+
+	err := validate.ValidateBody(todo)
+	if err != nil{
+		ctx.JSON(err.Error())
+		return err
 	}
 
 	t.Service.CretaeService(todo.Title,todo.Description,todo.Status)
