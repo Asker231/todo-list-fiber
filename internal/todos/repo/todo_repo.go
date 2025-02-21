@@ -13,7 +13,6 @@ type RepositoryTodo struct{
 	DataBase *pgxpool.Pool
 }
 
-
 func NewTodoRepo(dbref *pgxpool.Pool)*RepositoryTodo{
 	return &RepositoryTodo{
 		DataBase: dbref,
@@ -22,10 +21,11 @@ func NewTodoRepo(dbref *pgxpool.Pool)*RepositoryTodo{
 
 //cretate todo
 func(r *RepositoryTodo)Cretate(todo TodoModel){
-	query := `INSERT INTO todo(title,description,created_at,updated_at)VALUES(@title,@description,@created_at,@updated_at);`
+	query := `INSERT INTO todo(title,description,status,created_at,updated_at)VALUES(@title,@description,@status,@created_at,@updated_at);`
 	args := pgx.NamedArgs{
 		"title":todo.Title,
 		"description":todo.Description,
+		"status":todo.Status,
 		"created_at":todo.CreatedAt,
 		"updated_at":todo.UpdatedAt,
 	}
@@ -45,7 +45,6 @@ func(r *RepositoryTodo)DeleteByid(id int)(TodoModel,error){
 	}
 	return todo,nil
 }
-
 //getall todo
 func(r *RepositoryTodo)GetAllRepo()([]TodoModel,error){
 	var todos []TodoModel
@@ -56,7 +55,7 @@ func(r *RepositoryTodo)GetAllRepo()([]TodoModel,error){
 	defer rows.Close()
 	for rows.Next(){
 		var todo TodoModel
-		if err := rows.Scan(&todo.Id,&todo.Title,&todo.Description,&todo.CreatedAt,&todo.UpdatedAt);err != nil{
+		if err := rows.Scan(&todo.Id,&todo.Title,&todo.Description,&todo.Status,&todo.CreatedAt,&todo.UpdatedAt);err != nil{
 		   fmt.Println(err.Error())
 		}
 		todos = append(todos, todo)

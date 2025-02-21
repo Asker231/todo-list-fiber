@@ -30,7 +30,7 @@ func(t *TodoHandler)AddTodo(ctx *fiber.Ctx)error{
 		fmt.Println(err.Error()) 
 	}
 
-	t.Service.CretaeService(todo.Title,todo.Description)
+	t.Service.CretaeService(todo.Title,todo.Description,todo.Status)
 	
 	return ctx.SendString("Add todo")
 }
@@ -46,9 +46,6 @@ func(t *TodoHandler)GetAll(ctx *fiber.Ctx)error{
 func(t *TodoHandler)UpdateTodo(ctx *fiber.Ctx)error{
 	idStr := ctx.Params("id")
 	_,_ = strconv.Atoi(idStr)
-
-
-
 	return ctx.SendString("Update")
 }
 

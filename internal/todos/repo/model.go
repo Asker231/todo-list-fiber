@@ -6,6 +6,7 @@ import "time"
 type TodoModel struct{
    Id int  `json:"id"`
    Title string `json:"title"`	
+   Status string `json:"status"`
    Description string `json:"description"`
    CreatedAt time.Time `json:"created_at"`
    UpdatedAt time.Time `json:"updated_at"`

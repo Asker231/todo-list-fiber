@@ -19,11 +19,12 @@ func NewService(repo repo.RepositoryTodo)*ServiceTodo{
 }
 
 //create 
-func(s *ServiceTodo)CretaeService(title,description string){
+func(s *ServiceTodo)CretaeService(title,description,status string){
 
 	todo := repo.TodoModel{
 		Title: title,
 		Description: description,
+		Status: status,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
