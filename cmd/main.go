@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Asker231/todo-list-fiber.git/config"
 	"github.com/Asker231/todo-list-fiber.git/internal/todos"
+	"github.com/Asker231/todo-list-fiber.git/internal/todos/repo"
 	"github.com/Asker231/todo-list-fiber.git/pkg/db"
 	"github.com/gofiber/fiber/v2"
 )
@@ -21,12 +22,12 @@ func main() {
 	}
 	defer db.Close()
 	//init repo 
-	
+	todoRepo  := repo.NewTodoRepo(db)
 	//init service
-
+	serv := todos.NewService(*todoRepo)
 	//init handler
 
-	todos.NewTodoHandler(app)
+	todos.NewTodoHandler(app,serv)
 
 
 	app.Listen(":3002")
