@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func InitDataBAse(conf *config.AppConfig) (*pgxpool.Pool, error) {
+func InitDataBase(conf *config.AppConfig) (*pgxpool.Pool, error) {
 	conn, err := pgxpool.New(context.Background(), conf.DB.DNS)
 	if err != nil {
 		return nil, err
