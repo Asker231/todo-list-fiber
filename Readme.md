@@ -9,7 +9,7 @@
  <li>Удалять задачу.</li>
 </ol>
 
-<h1>Запус</h1>
+<h1>Запуск</h1>
 <ul>
   <li>git clone https://github.com/Asker231/todo-list-fiber.git</li>
   <li>go mod download</li>
