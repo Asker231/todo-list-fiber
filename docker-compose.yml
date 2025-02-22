@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:16.4
+    container_name: api-todo
+    environment:
+      - POSTGRES_USER=your user
+      - POSTGRES_PASSWORD=your pass
+    ports:
+      - "5432:5432"    
