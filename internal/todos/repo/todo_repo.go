@@ -8,58 +8,68 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-
-type RepositoryTodo struct{
+type RepositoryTodo struct {
 	DataBase *pgxpool.Pool
 }
 
-func NewTodoRepo(dbref *pgxpool.Pool)*RepositoryTodo{
+func NewTodoRepo(dbref *pgxpool.Pool) *RepositoryTodo {
 	return &RepositoryTodo{
 		DataBase: dbref,
 	}
 }
 
-//cretate todo
-func(r *RepositoryTodo)Cretate(todo TodoModel){
+// cretate todo
+func (r *RepositoryTodo) Cretate(todo TodoModel) {
 	query := `INSERT INTO todo(title,description,status,created_at,updated_at)VALUES(@title,@description,@status,@created_at,@updated_at);`
 	args := pgx.NamedArgs{
-		"title":todo.Title,
-		"description":todo.Description,
-		"status":todo.Status,
-		"created_at":todo.CreatedAt,
-		"updated_at":todo.UpdatedAt,
+		"title":       todo.Title,
+		"description": todo.Description,
+		"status":      todo.Status,
+		"created_at":  todo.CreatedAt,
+		"updated_at":  todo.UpdatedAt,
 	}
-	res,err := r.DataBase.Exec(context.Background(),query,args)
-	if err != nil{
+	res, err := r.DataBase.Exec(context.Background(), query, args)
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 	fmt.Println(res.String())
 }
 
-//delete todo
-func(r *RepositoryTodo)DeleteByid(id int)(TodoModel,error){
- 	var todo  TodoModel
-	err := r.DataBase.QueryRow(context.Background(),"DELETE  FROM todo WHERE id = $1",id).Scan(&todo.Id,&todo.Title,&todo.Description,&todo.CreatedAt,&todo.UpdatedAt)
-	if err != nil{
+// delete todo
+func (r *RepositoryTodo) DeleteByid(id int) (TodoModel, error) {
+	var todo TodoModel
+	err := r.DataBase.QueryRow(context.Background(), "DELETE  FROM todo WHERE id = $1", id).Scan(&todo.Id, &todo.Title, &todo.Description, &todo.CreatedAt, &todo.UpdatedAt)
+	if err != nil {
 		fmt.Println(err.Error())
 	}
-	return todo,nil
+	return todo, nil
 }
-//getall todo
-func(r *RepositoryTodo)GetAllRepo()([]TodoModel,error){
+
+// getall todo
+func (r *RepositoryTodo) GetAllRepo() ([]TodoModel, error) {
 	var todos []TodoModel
-	rows,err := r.DataBase.Query(context.Background(),"SELECT * FROM todo")
-	if err != nil{
-		return nil,err
+	rows, err := r.DataBase.Query(context.Background(), "SELECT * FROM todo")
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
-	for rows.Next(){
+	for rows.Next() {
 		var todo TodoModel
-		if err := rows.Scan(&todo.Id,&todo.Title,&todo.Description,&todo.Status,&todo.CreatedAt,&todo.UpdatedAt);err != nil{
-		   fmt.Println(err.Error())
+		if err := rows.Scan(&todo.Id, &todo.Title, &todo.Description, &todo.Status, &todo.CreatedAt, &todo.UpdatedAt); err != nil {
+			fmt.Println(err.Error())
 		}
 		todos = append(todos, todo)
 	}
-	return todos,nil
+	return todos, nil
 }
 
+// update by id
+func (r *RepositoryTodo) UpdateRepo(id int, status string) error {
+	res, err := r.DataBase.Exec(context.Background(), "UPDATE todo SET status = $1 WHERE id = $2", status, id)
+	if err != nil {
+		return err
+	}
+	fmt.Println(res)
+	return err
+
+}

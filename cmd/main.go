@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-
 func main() {
 	//init server
 	app := fiber.New()
@@ -16,19 +15,18 @@ func main() {
 	cnf := config.NewConfig()
 
 	//init db
-	db ,err := db.InitDataBAse(cnf)	
-	if err != nil{
-		return 
+	db, err := db.InitDataBAse(cnf)
+	if err != nil {
+		return
 	}
 	defer db.Close()
-	//init repo 
-	todoRepo  := repo.NewTodoRepo(db)
+	//init repo
+	todoRepo := repo.NewTodoRepo(db)
 	//init service
 	serv := todos.NewService(*todoRepo)
 	//init handler
 
-	todos.NewTodoHandler(app,serv)
-
+	todos.NewTodoHandler(app, serv)
 
 	app.Listen(":3002")
 }

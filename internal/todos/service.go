@@ -7,49 +7,56 @@ import (
 	"github.com/Asker231/todo-list-fiber.git/internal/todos/repo"
 )
 
-
-type ServiceTodo struct{
+type ServiceTodo struct {
 	Repo repo.RepositoryTodo
 }
 
-func NewService(repo repo.RepositoryTodo)*ServiceTodo{
+func NewService(repo repo.RepositoryTodo) *ServiceTodo {
 	return &ServiceTodo{
 		Repo: repo,
 	}
 }
 
-//create 
-func(s *ServiceTodo)CretaeService(title,description,status string){
+// create
+func (s *ServiceTodo) CretaeService(title, description string) {
 
 	todo := repo.TodoModel{
-		Title: title,
+		Title:       title,
 		Description: description,
-		Status: status,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Status:      "new",
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 	s.Repo.Cretate(todo)
 
 }
 
 //find by id
+func (s *ServiceTodo) DeleteById(id int) repo.TodoModel {
 
-func(s *ServiceTodo)DeleteById(id int)(repo.TodoModel){
-
-	t ,err := s.Repo.DeleteByid(id)
-	if err != nil{
+	todo, err := s.Repo.DeleteByid(id)
+	if err != nil {
 		fmt.Println(err.Error())
 	}
-	return t
+	return todo
 }
 
-//get all 
-func(s *ServiceTodo)GetAllTodoService()([]repo.TodoModel){
+// get all
+func (s *ServiceTodo) GetAllTodoService() []repo.TodoModel {
 
-	data,err := s.Repo.GetAllRepo()
-	if err != nil{
+	data, err := s.Repo.GetAllRepo()
+	if err != nil {
 		fmt.Println(err.Error())
 		return nil
 	}
 	return data
+}
+
+// update by id
+func (s *ServiceTodo) UpdateTodoService(id int, status string) error {
+	err := s.Repo.UpdateRepo(id, status)
+	if err != nil {
+		return err
+	}
+	return err
 }
